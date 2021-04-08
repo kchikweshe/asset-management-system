@@ -1,16 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import Registration from './components/forms/authentication/Registration.jsx'
-
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import VerticalLinearStepper from './components/forms/authentication/Stepper';
-
+import Homepage from './components/home';
 ReactDOM.render(
-  <React.StrictMode>
-    <VerticalLinearStepper/>
-  </React.StrictMode>,
+
+  <VerticalLinearStepper />
+  ,
   document.getElementById('root')
 );
 

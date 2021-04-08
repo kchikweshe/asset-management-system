@@ -19,8 +19,6 @@ const useStyles = makeStyles((theme) => ({
 
   root: {
     height: '80',
-    marginLeft:'auto',
-    marginRight:'auto'
 
   },
   image: {
@@ -34,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     margin: theme.spacing(8, 4),
     display: 'flex',
+    height: '50%',
     flexDirection: 'column',
     alignItems: 'center',
   },
@@ -43,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
   },
   form: {
     width: '100%', // Fix IE 11 issue.
+    height: '50%',
     marginTop: theme.spacing(1),
   },
   submit: {
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
   formControl: {
     margin: theme.spacing(2),
-    width:100,
+    width: 100,
     minWidth: 180,
   },
   selectEmpty: {
@@ -72,7 +72,12 @@ const useStyles = makeStyles((theme) => ({
   resetContainer: {
     padding: theme.spacing(3),
   },
-
+  alertRoot: {
+    width: '100%',
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
+  },
 }));
 
 
