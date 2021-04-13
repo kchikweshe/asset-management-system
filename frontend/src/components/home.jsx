@@ -6,10 +6,10 @@ import { Col, Row, Navbar, Container } from 'react-bootstrap';
 import { Badge } from '@material-ui/core';
 import MailIcon from '@material-ui/icons/Mail';
 import { badge } from "../components/ui-components/UIComponents"
+import Logo from './ui-components/Logo';
 
-function name(params) {
+import PropTypes from 'prop-types'
 
-}
 
 export default class Homepage extends Component {
 
@@ -53,7 +53,7 @@ export default class Homepage extends Component {
         <Row >
           <Col sm={12} className={"border-gray-500 border"}>
             <Navbar>
-              <Navbar.Brand href="#home">Asset Management</Navbar.Brand>
+              <Navbar.Brand href="#home"><Logo/> </Navbar.Brand>
               <Navbar.Toggle />
               <Navbar.Collapse className="justify-content-end">
                 <Navbar.Text>
@@ -82,4 +82,8 @@ export default class Homepage extends Component {
       </Container>
     );
   }
+}
+Homepage.propTypes = {
+  employeeId:PropTypes.number.isRequired,
+  token:PropTypes.string.isRequired,
 }

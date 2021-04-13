@@ -53,4 +53,15 @@ export default class ServiceAPI {
             }
         })
     }
+
+    static async getWorkOrders(employee_id, token){
+        console.info(`Token : ${token}`)
+        console.info(`empId : ${employee_id}`)
+        const url = `${API_URL}/api/work_orders/${employee_id}/`;
+        return await axios.get(url, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+    }
 }

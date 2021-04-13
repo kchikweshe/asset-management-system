@@ -108,8 +108,6 @@ class Role(BaseEntity):
                                    on_delete=models.CASCADE)
 
 
-
-
 class Asset(BaseEntity):
     """
     Represents the asset that is consumable to Employees
@@ -134,7 +132,7 @@ class Employee(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=False)
 
     title = models.CharField(max_length=5, blank=False, choices=TITLE_CHOICES, default='Mr.')
-    address = models.OneToOneField(on_delete=models.CASCADE, to=Address, default=None, null=True)
+    address = models.OneToOneField(on_delete=models.CASCADE, to=Address, default=None, null=False)
     date_of_birth = models.DateField(max_length=8, null=True)
     gender = models.CharField(max_length=10,
                               choices=GENDER_CHOICES, default='M')
@@ -146,7 +144,7 @@ class Employee(models.Model):
     updated_date = models.DateTimeField(auto_now=True, null=True)
 
     def __repr__(self):
-        return "<Employee: {} {} : {} >".format(self.title, self.get_full_name(), self.department, self.role)
+        return "<Employee: {} {} : {} >".format(self.title, self.user.get_full_name(), self, self.role)
 
     @property
     def age(self):

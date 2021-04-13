@@ -6,8 +6,8 @@ They’re everything that test needs to do its thing.
 The fixtures listed here represent model instances defined in the assets.models module.
 """
 import pytest
+
 from asset_management.models import *
-from django.contrib.auth.models import User
 
 
 @pytest.fixture
@@ -43,7 +43,7 @@ def department_one(db, location_one):
     """
      Fixture returning an Department instance
      """
-    dept= Department(name="IT", description="Information Technology")
+    dept = Department(name="IT", description="Information Technology")
     dept.save()
     return dept
 
@@ -71,37 +71,41 @@ def asset_one(db, location_one):
                  purchase_date=date(day=12, month=6, year=2022), location=location_one
                  ).save()
 
+
 @pytest.fixture
 def user_one(db):
     """
     Fixture returning an Role instance
     """
-    user=User(first_name="Komborerai",last_name="Chikweshe",email="kombogc@gmail.com",username="kchikweshe",password="!@#123kombo")
+    user = User(first_name="Komborerai", last_name="Chikweshe", email="kombogc@gmail.com", username="kchikweshe",
+                password="!@#123kombo")
     user.save()
     return user
+
+
 @pytest.fixture
-def role_one(db,department_one):
+def role_one(db, department_one):
     """
     Fixture returning an Role instance
     """
-    role=Role(name="Software Developer", description="Developing systems",department=department_one)
+    role = Role(name="Software Developer", description="Developing systems", department=department_one)
     role.save()
     return role
 
 
 @pytest.fixture
-def role_two(db,department_one):
+def role_two(db, department_one):
     """
     Fixture returning an Role instance
     """
 
-    role = Role(name="System Administrator", description="asjasj",department=department_one)
+    role = Role(name="System Administrator", description="asjasj", department=department_one)
     role.save()
     return role
 
 
 @pytest.fixture
-def employee_one(db, department_one, address_one, request_one):
+def employee_one(db, role_one, address_one, request_one):
     """
      Fixture returning an Employee instance
      """
@@ -110,9 +114,9 @@ def employee_one(db, department_one, address_one, request_one):
                 username="ironman", password="lasaksa", email="ironman@gmail.com")
     user.save()
     employee = Employee(title="Eng.", gender="M",
-                        date_of_birth=dob, user=user,
-                        department=department_one, address=address_one,
-
+                        date_of_birth=dob, user=user
+                        , address=address_one,
+                        role=role_one,
                         national_identifier_number="63-1506262Z25",
                         )
     employee.save()
@@ -147,22 +151,26 @@ def request_one(db):
 
 
 @pytest.fixture
-def work_order(db):
+def work_order(db, employee_one):
     """
      Fixture returning an Work-order instance
      """
-    return WorkOrder(name="Fix Laptop", description="Fix Asset one",
-                     due_date=date(day=6, month=12, year=2021),
-                     maintenance_type="Ins", priority='H',
-                     status='IP'
-                     ).save()
+    work_order = WorkOrder(name="Fix Laptop", description="Fix Asset one",
+                           due_date=date(day=6, month=12, year=2021),
+                           maintenance_type="Ins", priority='H',
+                           status='IP', worker=employee_one
+                           )
+    work_order.save()
+    return work_order
 
 
 @pytest.fixture()
-def work_order_two(db):
+def work_order_two(db,employee_one):
     """Fixture returning an Work-order instance"""
-    return WorkOrder(name="Printer Problem", description="Fix Printer one",
-                     due_date=date(day=6, month=3, year=2021),
-                     maintenance_type="Prv", priority='H',
-                     status='IP'
-                     )
+    work_order = WorkOrder(name="Printer Problem", description="Fix Printer one",
+                           due_date=date(day=6, month=3, year=2021),
+                           maintenance_type="Prv", priority='H',
+                           status='IP', worker=employee_one
+                           )
+    work_order.save()
+    return work_order

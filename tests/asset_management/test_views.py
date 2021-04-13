@@ -193,3 +193,119 @@ class TestUser(BaseTest):
         response = client.post(path=self.url, data=self.payload, HTTP_ACCEPT='application/json')
         print("Response : ", response.data)
         assert not response.data == 201
+
+
+class TestEmployee(BaseTest):
+    """
+    Test user authentication
+    """
+    url = "/dj-rest-auth/registration/"
+    payload = {
+        'first_name': 'komborerai',
+        'last_name': 'chikweshe',
+        'email': 'kombogc@gmail.com',
+        'username': 'kombo',
+        'password1': '!@#123kombo',
+        'password2': '!@#123kombo'}
+
+    def test_add_with_valid_data(self, client, dept=None, role=None):
+        """
+        Check to ensure object can be saved using valid payload
+        """
+        c = APIClient()
+
+        response = client.post(self.url, self.payload, content_type=self.content_type)
+        key = response.data["key"]
+        user = response.data["user"]
+        assert key is not None
+        assert user is not None
+        assert response.status_code is 201
+
+        self.payload['first_name'] = 'tony'
+        response2 = client.post(self.url, self.payload, content_type=self.content_type)
+        assert response2.status_code is not 201
+
+        c.credentials(HTTP_AUTHORIZATION='Bearer ' + key)
+
+        address_response = c.post("/api/address/", data={"street": "5 Quendon Rd",
+                                                         "suburb": "Strathaven",
+                                                         "city": "Harare",
+                                                         "province": "Harare"}, format='json')
+        assert Address.objects.filter(id=address_response.data['id']) is not None
+        dept = Department(name="IT", description="sdsfsdff")
+        dept.save()
+        role = Role(name="Software Engineer", description="lddlsdf", department=dept)
+        role.save()
+        address = address_response.data['id']
+        # print(address)
+        data = {
+
+            "user": user,
+            "address": address,
+            "title": "Mr.",
+            "gender": "Male",
+            "date_of_birth": "1995-7-12",
+            "national_identifier_number": "63-1506262Z25",
+            "role": role.pk,
+
+        }
+
+        registration_response = c.post("/api/employee/", data=data, format='json')
+
+        assert registration_response.status_code is 201
+
+    def test_add_with_invalid_first_name(self, db, client):
+        """When user email is blank, then user is not created"""
+        self.payload['first_name'] = ''
+        response = client.post(self.url, data=self.payload, HTTP_ACCEPT='application/json')
+
+        assert not response.status_code == 201
+
+    def test_add_with_invalid_email(self, db, client):
+        self.payload['email'] = ''
+        assert self.payload['email'] == ''
+        print(self.payload)
+        response = client.post(path=self.url, data=self.payload, HTTP_ACCEPT='application/json')
+        print("Response : ", response.data)
+        assert not response.status_code == 201
+
+    def test_add_with_string_user_id(self, db, client, address_one, role_one):
+        " Given , user with string user id"
+        c = APIClient()
+
+        response = client.post(self.url, data=self.payload, HTTP_ACCEPT='application/json')
+        c.credentials(HTTP_AUTHORIZATION='Bearer ' + response.data['key'])
+        assert type(response.data["user"]) is int
+        user = response.data['user']
+        assert user is 1
+        assert User.objects.filter(pk=1) is not None
+
+        assert isinstance(address_one, Address)
+        url = "/api/employee/"
+        payload = {
+            "user": user,
+            "address": address_one.pk,
+            "title": "Mr.",
+            "gender": "Male",
+            "date_of_birth": "1995-7-12",
+            "national_identifier_number": "63-1506262Z25",
+            "role": 1
+        }
+        response2 = c.post(path=url, data=payload, HTTP_ACCEPT='application/json')
+        assert response2.status_code == 201
+
+    def test_add_with_invalid_username(self, db, client):
+        self.payload['username'] = ''
+
+        assert self.payload['username'] == ''
+        print(self.payload)
+        response = client.post(path=self.url, data=self.payload, HTTP_ACCEPT='application/json')
+        print("Response : ", response.data)
+        assert not response.data == 201
+
+
+@pytest.mark.django_db
+class TestEmployeeWorkOrder(BaseTest):
+    def test_employee_has_one_work_order(self, employee_one, work_order, work_order_two):
+
+        assert employee_one.work_orders.count() is 2
