@@ -8,28 +8,24 @@ import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
 import Typography from "@material-ui/core/Typography";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import { render } from "@testing-library/react";
-import React, { useEffect, useState } from "react";
+import {render} from "@testing-library/react";
+import React, {useEffect, useState} from "react";
 import ServiceAPI from "../Service.js";
 import useStyles from "../styles.js";
-import Homepage from "../../home.jsx";
-import TransitionAlert from "../../ui-components/TransitionalAlert.js";
-import CustomTextField from "../../ui-components/CustomTextField.jsx";
-import CustomSelectField from "../../ui-components/CustomSelectField.js";
-
-import SelectField from "../../ui-components/SelectField.js";
-import DateField from "../../ui-components/DateField.js";
+import {TransitionAlert} from "../../ui-components/TransitionalAlert.js";
 import UserForm from "../../ui-components/forms/UserRegistration.jsx";
 import AddressForm from "../../ui-components/forms/AddressForm.jsx";
-import MiscalleniousForm from "../../ui-components/forms/Miscallenious.jsx";
+import MiscellaneousForm from "../../ui-components/forms/Miscallenious.jsx";
 import Logo from "../../ui-components/Logo.jsx";
-
+import {Homepage} from "../../home";
 
 
 export const VerticalLinearStepper = (
-    { handleUserRegistration,
+    {
+        handleUserRegistration,
         handleAddressCreation,
-        handleEmployeeCreate }) => {
+        handleEmployeeCreate
+    }) => {
     const [title, setTitle] = useState("Mr.");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -40,11 +36,10 @@ export const VerticalLinearStepper = (
     const [dateOfBirth, setdateOfBirth] = useState("");
     const [gender, setGender] = useState("Male");
     const [department, setDepartment] = useState("");
-    const [role, setRole] = useState();
+    const [role, setRole] = useState(0);
     const [address, setAddress] = useState();
     const [roles, setRoles] = useState([]);
     const [departments, setDepartments] = useState([]);
-    const [customRoles, setCustomRoles] = useState([]);
     const [suburb, setSuburb] = useState("");
     const [city, setCity] = useState("");
     const [province, setProvince] = useState("");
@@ -54,34 +49,32 @@ export const VerticalLinearStepper = (
     const [activeStep, setActiveStep] = useState(0);
 
     const classes = useStyles();
-    console.info(username)
 
     useEffect(() => {
-        userData ?
-            ServiceAPI.getAll("departments", userData.key)
-                .then((res) => {
-                    setDepartments(res.data);
+            userData ?
+                ServiceAPI.getAll("departments", userData.key)
+                    .then((res) => {
+                        setDepartments(res.data);
 
-                })
-                .catch((error) => {
-                    console.error(error)
-                }) :
-            render(<TransitionAlert severity={"info"}
-                title="Loading" message={"Waiting for departments........"} />
-            )
-    }
+                    })
+                    .catch((error) => {
+                        console.error(error)
+                    }) :
+                render(<TransitionAlert severity={"info"}
+                                        title="Loading" message={"Waiting for departments........"}/>
+                )
+        }
 
         , [userData])
 
 
     useEffect(() => {
-        departments.length > 0 ?
-            setActiveStep(1) :
-            setActiveStep(0)
-    }
+            departments.length > 0 ?
+                setActiveStep(1) :
+                setActiveStep(0)
+        }
 
         , [departments])
-
 
 
     useEffect(() => {
@@ -99,99 +92,132 @@ export const VerticalLinearStepper = (
             last_name: lastName,
             email: email,
         };
-        // ServiceAPI.createEmployee(employee)
-        //     .then((response) => {
-        //         render(<TransitionAlert datatestid={'toast'} severity={"success"}
-        //             title={"Congratulations"} message={`Proceed to the next steps.`} />
-        //         )
-        //         setUserData(response.data);
-        //     })
-        //     .catch((error) => {
-
-        //         render(<TransitionAlert severity={"error"}
-        //             title={"User Account Error"} message={`User creation failed ${error}.`} />
-        //         );
-        //     });
-        handleUserRegistration(() => {
-            ServiceAPI.createEmployee(employee)
-                .then((response) => {
-                    render(<TransitionAlert datatestid={'toast'} severity={"success"}
-                        title={"Congratulations"} message={`Proceed to the next steps.`} />
-                    )
-                    setUserData(response.data);
-                })
-                .catch((error) => {
-
-                    render(<TransitionAlert severity={"error"}
-                        title={"User Account Error"} message={`User creation failed ${error}.`} />
-                    );
-                });
-        })
-
-    };
-
-
-
-    const handleDepartmentChange = e => {
-        let dept = e;
-        console.info("dept " + dept.toString())
-        setDepartment(dept);
-        let roles = dept.roles;
-        console.info("dept roles" + roles)
-        setCustomRoles(roles);
-    };
-
-    const createAddress = data => {
-        handleAddressCreation = () => {
-            let token = userData.key;
-            ServiceAPI.createAddress(data, token)
-                .then((resp) => {
-                    setAddress(resp.data["id"]);
-                })
-                .catch((error) => render(
-                    <TransitionAlert
-                        placeholder={'error-alert'}
-                        severity={"error"}
-                        title={"Address Creation Error"}
-                        message={error} />
+        ServiceAPI.createEmployee(employee)
+            .then((response) => {
+                render(<TransitionAlert datatestid={'toast'} severity={"success"}
+                                        title={"Congratulations"} message={`Proceed to the next steps.`}/>
                 )
+                setUserData(response.data);
+            })
+            .catch((error) => {
 
+                render(<TransitionAlert severity={"error"} open={true}
+                                        title={"User Account Error"} message={`User creation failed ${error}.`}/>
                 );
+            });
+        // handleUserRegistration(() => {
+        //     ServiceAPI.createEmployee(employee)
+        //         .then((response) => {
+        //             render(<TransitionAlert datatestid={'toast'} severity={"success"}
+        //                 title={"Congratulations"} message={`Proceed to the next steps.`} />
+        //             )
+        //             setUserData(response.data);
+        //         })
+        //         .catch((error) => {
+
+        //             render(<TransitionAlert severity={"error"}
+        //                 title={"User Account Error"} message={`User creation failed ${error}.`} />
+        //             );
+        //         });
+        // })
+
+    };
+
+
+    const handleDepartmentChange = (e) => {
+        try {
+
+            console.info("e :", e)
+            let dept = e
+            setDepartment((dept))
+            let roles = dept.roles
+            setRoles(roles)
+
+            console.info("Result :", roles)
+        } catch (err) {
+            render(<TransitionAlert severity={"error"} message={`${err}`}/>)
         }
-    };
 
-
-    const createEmployee = data => {
-        let token = userData.key;
-
-        handleEmployeeCreate(() => {
-            ServiceAPI.registerEmployee(data, token)
-                .then((resp) => {
-                    render(<Homepage employeeId={resp.data['id']} token={token} />)
-                }).then(
-                    () => {
-                        let message = "You have successfuly registered as an employee";
-                        render(TransitionAlert("success", "Success", message));
-                    }
-                )
-                .catch((error) => {
-                    render(TransitionAlert("error", "Error", ` ${Array.of(error)}`));
-                });
-        })
 
     };
 
-
-    const handleSubmit = e => {
+    const createAddress = (e) => {
         e.preventDefault();
-        let address_json = {
+        let data = {
             street: street,
             suburb: suburb,
             city: city,
             province: province,
         };
 
-        createAddress(address_json);
+        let token = userData.key;
+        ServiceAPI.createAddress(data, token)
+            .then((resp) => {
+                setAddress(resp.data["id"]);
+            }).then(() => setActiveStep(2))
+            .catch((error) => render(
+                <TransitionAlert
+                    placeholder={'error-alert'}
+                    severity={"error"}
+                    title={"Address Creation Error"}
+                    message={`${error}`}/>
+                )
+            )
+        //handleAddressCreation = () => {
+        // let token = userData.key;
+        // ServiceAPI.createAddress(data, token)
+        //     .then((resp) => {
+        //         setAddress(resp.data["id"]);
+        //     })
+        //     .catch((error) => render(
+        //         <TransitionAlert
+        //             placeholder={'error-alert'}
+        //             severity={"error"}
+        //             title={"Address Creation Error"}
+        //             message={error} />
+        //     )
+
+        //     );
+
+    };
+
+
+    const createEmployee = employee => {
+        let token = userData.key;
+        ServiceAPI.registerEmployee(employee, token)
+            .then((resp) => {
+                render((<Homepage employeeId={resp.data['id']} token={token}/>))
+            }).then(
+            () => {
+                let message = `Congratulations ${title} ${lastName}. You have successfully registered as an employee`;
+                render(<TransitionAlert severity={"success"} message={message}/>);
+            }
+        )
+            .catch((error) => {
+                render(<TransitionAlert severity={"error"} message={`${error}`}/>);
+            });
+
+        // handleEmployeeCreate(() => {
+        //     // ServiceAPI.registerEmployee(data, token)
+        //     //     .then((resp) => {
+        //     //         render(<Homepage employeeId={resp.data['id']} token={token} />)
+        //     //     }).then(
+        //     //         () => {
+        //     //             let message = "You have successfuly registered as an employee";
+        //     //             render(TransitionAlert("success", "Success", message));
+        //     //         }
+        //     //     )
+        //     //     .catch((error) => {
+        //     //         render(TransitionAlert("error", "Error", ` ${Array.of(error)}`));
+        //     //     });
+        // })
+
+    };
+
+
+    const handleSubmit = e => {
+        e.preventDefault()
+        // createAddress(address_json);
         let user = userData.user;
         let employee = {
             user: user,
@@ -207,17 +233,17 @@ export const VerticalLinearStepper = (
     };
 
 
-
     function getSteps() {
         return ["Basic Details", "Employee Address", "Final Details"];
     }
+
     function getStepContent(step) {
         switch (step) {
             case 0:
                 return (
-                    <div class="mt-2 sm:mx-auto sm: w-3/6 sm:max-w-3/5" >
+                    <div class="mt-2 sm:mx-auto sm: w-3/6 sm:max-w-3/5">
                         <div class="bg-white py-4 px-10 shadow rounded-lg sm:px-10 ">
-                            <Logo />
+                            <Logo/>
                             <UserForm
                                 title={title}
                                 setTitle={setTitle}
@@ -245,17 +271,17 @@ export const VerticalLinearStepper = (
                 );
             case 1:
                 return (
-                    <div class="mt-8 sm:mx-auto sm: w-3/6 sm:max-w-full" >
+                    <div class="mt-8 sm:mx-auto sm: w-3/6 sm:max-w-full">
                         <div class="bg-white py-8 px-10 shadow rounded-lg sm:px-10 ">
-                            <Logo />
+                            <Logo/>
                             <AddressForm street={street} suburb={suburb}
-                                province={province}
-                                city={city}
-                                setStreet={setStreet}
-                                setCity={setCity}
-                                setProvince={setProvince}
-                                setSuburb={setSuburb}
-                                handleSubmit={handleSubmit}
+                                         province={province}
+                                         city={city}
+                                         setStreet={setStreet}
+                                         setCity={setCity}
+                                         setProvince={setProvince}
+                                         setSuburb={setSuburb}
+                                         handleSubmit={createAddress}
                             />
                         </div>
                     </div>
@@ -263,20 +289,19 @@ export const VerticalLinearStepper = (
                 );
             case 2:
                 return (
-                    <div class="mt-8 sm:mx-auto sm: w-3/6 sm:max-w-full" >
+                    <div class="mt-8 sm:mx-auto sm: w-3/6 sm:max-w-full">
                         <div class="bg-white py-8 px-10 shadow rounded-lg sm:px-10 ">
-                            <Logo />
-                            <MiscalleniousForm
+                            <Logo/>
+                            <MiscellaneousForm
                                 setNationalIdentifierNumber={setNationalIdentifierNumber}
                                 nationalIdentifierNumber={nationalIdentifierNumber}
-                                register={register}
                                 handleDepartmentChange={handleDepartmentChange}
                                 departments={departments}
                                 department={department}
-                                customRoles={customRoles}
+                                roles={roles}
                                 role={role}
                                 setRole={setRole}
-                                save={createEmployee}
+                                save={handleSubmit}
                             />
                         </div>
                     </div>
@@ -305,7 +330,7 @@ export const VerticalLinearStepper = (
 
     return (
         <div className={classes.root}>
-            <Stepper placeholder="stepper" activeStep={activeStep} orientation={"vertical"} >
+            <Stepper placeholder="stepper" activeStep={activeStep} orientation={"vertical"}>
                 {steps.map((label, index) => (
                     <Step key={label}>
                         <StepLabel>{label}</StepLabel>
@@ -319,7 +344,7 @@ export const VerticalLinearStepper = (
                                         className={classes.button}
                                     >
                                         Back
-                                     </Button>
+                                    </Button>
                                     <Button
                                         variant="contained"
                                         color="primary"
@@ -339,7 +364,7 @@ export const VerticalLinearStepper = (
                     <Typography>All steps completed - you&apos;re finished</Typography>
                     <Button onClick={handleReset} className={classes.button}>
                         Reset
-          </Button>
+                    </Button>
                 </Paper>
             )}
         </div>

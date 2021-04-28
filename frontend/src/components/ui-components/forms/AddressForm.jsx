@@ -1,13 +1,5 @@
-import {
-    Avatar,
-
-    Grid,
-
-
-} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import React from "react";
 import CustomTextField from "../../ui-components/CustomTextField.jsx";
 import PropTypes from 'prop-types'

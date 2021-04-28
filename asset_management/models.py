@@ -143,8 +143,8 @@ class Employee(models.Model):
     created_date = models.DateTimeField(auto_now_add=True, null=True)
     updated_date = models.DateTimeField(auto_now=True, null=True)
 
-    def __repr__(self):
-        return "<Employee: {} {} : {} >".format(self.title, self.user.get_full_name(), self, self.role)
+    def __str__(self):
+        return " %s %s  " % (self.title, self.user.get_full_name())
 
     @property
     def age(self):
@@ -161,14 +161,14 @@ class Request(BaseEntity):
     Represents requests to made by an employee
     """
     HIGH = 'H'
-    MEDIUM = 'M'
+    NORMAL = 'N'
     LOW = 'L'
-    NONE = 'N'
+    NONE = 'NO'
 
-    PRIORITY_CHOICES = ((HIGH, 'High'),
-                        (MEDIUM, 'Medium'),
-                        (LOW, 'Low'),
-                        (NONE, 'None'))
+    PRIORITY_CHOICES = (('High', HIGH),
+                        ('Normal', NORMAL),
+                        ('Low', LOW),
+                        ('None', NONE))
     priority = models.CharField(max_length=6, choices=PRIORITY_CHOICES, default='N', blank=False)
     employee = models.ForeignKey(to=Employee, related_name='requests', on_delete=models.CASCADE, null=True)
 
@@ -183,12 +183,12 @@ class WorkOrder(ChoiceType):
     EMERGENCY = "Emg"
 
     MAINTENANCE_CHOICES = (
-        (PREVENTIVE, 'Preventive'),
-        (ROUTINE, 'Routine'),
-        (INSPECTION, 'Inspection'),
-        (EMERGENCY, 'Emergency')
+        ('Preventive', PREVENTIVE),
+        ('Routine', ROUTINE),
+        ('Inspection', INSPECTION),
+        ('Emergency', EMERGENCY,)
     )
 
     worker = models.ForeignKey(to=Employee, related_name="work_orders", on_delete=models.CASCADE, null=True)
     due_date = models.DateField(max_length=8)
-    maintenance_type = models.CharField(max_length=10, blank=False, choices=MAINTENANCE_CHOICES, default="Routine")
+    maintenance_type = models.CharField(max_length=10, blank=False, choices=MAINTENANCE_CHOICES, default="Rtn")

@@ -21,7 +21,7 @@ function UserForm(props) {
 
     const classes = useStyles()
 
-    return <div >
+    return <div>
 
         <form onSubmit={props.register} className={"mb-0 space-y-6 "}>
             <div className={"md:grid grid-cols-3 sm:grid-cols-3 gap-4"}>
@@ -105,7 +105,7 @@ function UserForm(props) {
             </div>
 
             <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
+                control={<Checkbox value="remember" color="primary"/>}
                 label="Remember me"
             />
             <Button
@@ -118,12 +118,12 @@ function UserForm(props) {
                 className={classes.submit}
             >
                 Create Account
-                </Button>
+            </Button>
             <Grid container>
                 <Grid item md>
                     <Link href="#" variant="body2">
                         Forgot password?
-                        </Link>
+                    </Link>
                 </Grid>
                 <Grid item>
                     <Link
@@ -138,11 +138,7 @@ function UserForm(props) {
     </div>
 
 
-
-
 }
-
-
 
 
 // Specifies the default values for props:

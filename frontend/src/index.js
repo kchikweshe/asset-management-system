@@ -2,13 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {VerticalLinearStepper} from './components/forms/authentication/Stepper';
-import Homepage from './components/home';
-ReactDOM.render(
 
-  <Homepage />
-  ,
-  document.getElementById('root')
+import App from "./App";
+import {BrowserRouter} from "react-router-dom";
+import {createBrowserHistory} from "history";
+let history = createBrowserHistory();
+
+ReactDOM.render(
+    <BrowserRouter history={history}><App/></BrowserRouter>
+    ,
+    document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function

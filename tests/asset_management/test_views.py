@@ -301,11 +301,21 @@ class TestEmployee(BaseTest):
         print(self.payload)
         response = client.post(path=self.url, data=self.payload, HTTP_ACCEPT='application/json')
         print("Response : ", response.data)
-        assert not response.data == 201
+        assert not response.status_code == 201
 
 
 @pytest.mark.django_db
 class TestEmployeeWorkOrder(BaseTest):
     def test_employee_has_one_work_order(self, employee_one, work_order, work_order_two):
-
         assert employee_one.work_orders.count() is 2
+
+    @pytest.mark.django_db
+    def test_get_work_order_by_employee(self, db, client, user_one, employee_one, work_order, work_order_two):
+        self.url = "/dj-rest-auth/login/"
+        user_payload = {
+            "username": user_one.username,
+            "password": user_one.password
+        }
+        query = WorkOrder.objects.filter(worker=employee_one)
+        response = client.post(path=self.url, data=user_payload, content_type=self.content_type)
+        assert query == 200

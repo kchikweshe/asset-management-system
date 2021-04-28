@@ -9,7 +9,7 @@ urlpatterns = [
 
     path("api/employees/", EmployeeList.as_view()),
     path("api/departments/", DepartmentList.as_view()),
-
+    path("api/workorders/<int:pk>", WorkOrderList.as_view()),
     path("api/roles/", RoleList.as_view()),
     path("api/employees/<int:pk>/", EmployeeDetail.as_view()),
     path("api/employee/", EmployeeDetail.as_view()),

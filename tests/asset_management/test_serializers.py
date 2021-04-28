@@ -42,7 +42,7 @@ class TestEmployeeSerializer(BaseTestSerializer):
         self.employee_payload['role'] = role_one.pk
         self.serializer = EmployeeSerializer(data=self.employee_payload)
         assert self.serializer.is_valid(raise_exception=True)
-        assert self.serializer.validated_data is  200
+        assert self.serializer.validated_data is 200
 
 
 class TestUserSerializer(BaseTestSerializer):
@@ -78,7 +78,7 @@ class TestDepartmentSerializer(BaseTestSerializer):
             "name": "IT",
             "description": "Information Technology",
             "roles": [
-                {"id":1,"name":"Software Developer"},
+                {"id": 1, "name": "Software Developer"},
                 {"id": 2, "name": "System Administrator"}
             ]
         }

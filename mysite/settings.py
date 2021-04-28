@@ -81,6 +81,7 @@ REST_FRAMEWORK = {
 }
 REST_AUTH_SERIALIZERS = {
     'REGISTER_SERIALIZER': 'asset_management.serializers.RegisterSerializer',
+    'LOGIN_SERIALIZER':'asset_management.serializers.CustomLoginSerializer'
 }
 
 TEMPLATES = [

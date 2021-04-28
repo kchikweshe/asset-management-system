@@ -3,9 +3,33 @@
 '''
 
 from dj_rest_auth.registration.serializers import RegisterSerializer
+from dj_rest_auth.serializers import LoginSerializer
 from rest_framework import serializers
 
 from .models import *
+
+
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = ['id', 'street', 'suburb', 'city', 'province']
+        read_only_fields = ('id', 'created_date', 'updated_date',)
+
+
+class RoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Role
+        fields = ['id', 'name']
+        read_only_fields = ('id', 'created_date', 'updated_date', 'department_id')
+
+
+class DepartmentSerializer(serializers.ModelSerializer):
+    roles = RoleSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Department
+        fields = ["id", "name", "description", "roles"]
+        read_only_fields = ('id', 'created_date', 'updated_date',)
 
 
 class CustomRegisterSerializer(RegisterSerializer):
@@ -14,6 +38,7 @@ class CustomRegisterSerializer(RegisterSerializer):
 
     class Meta:
         model = User
+        fields = '__all__'
 
     def get_cleaned_data(self):
         return {
@@ -27,8 +52,24 @@ class CustomRegisterSerializer(RegisterSerializer):
         }
 
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'email', 'username']
+        read_only_fields = ('id', 'created_date', 'updated_date')
+
+
+class CustomLoginSerializer(LoginSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'password']
+        read_only_fields = ('id', 'created_date', 'updated_date',)
+
+
 class EmployeeSerializer(serializers.ModelSerializer):
-    # user_details = CustomRegisterSerializer(many=False, read_only=True)
+    user = UserSerializer(many=False, read_only=True)
+    address = AddressSerializer(many=False, read_only=True)
+    role = RoleSerializer(many=False, read_only=True)
 
     class Meta:
         model = Employee
@@ -64,33 +105,13 @@ class LocationSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'created_date', 'updated_date',)
 
 
-class AddressSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Address
-        fields = ['id' ,'street', 'suburb', 'city', 'province']
-        read_only_fields = ('id', 'created_date', 'updated_date',)
-
-
-class RoleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Role
-        fields = ['id', 'name']
-        read_only_fields = ('id', 'created_date', 'updated_date', 'department_id')
-
-
-class DepartmentSerializer(serializers.ModelSerializer):
-    roles = RoleSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Department
-        fields = ["id", "name", "description", "roles"]
-        read_only_fields = ('id', 'created_date', 'updated_date',)
-
-
 class WorkOrderSerializer(serializers.ModelSerializer):
+    worker = EmployeeSerializer(many=False, read_only=True)
+
     class Meta:
         model = WorkOrder
-        fields = '__all__'
+        fields = ["id", "name", "description", "status", "maintenance_type", "worker","due_date"]
+        read_only_fields = ('id', 'created_date', 'updated_date',)
 
 
 class RequestSerializer(serializers.ModelSerializer):

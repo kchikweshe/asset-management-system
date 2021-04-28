@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 const API_URL = 'http://localhost:8000';
 
 export default class ServiceAPI {
@@ -32,10 +33,21 @@ export default class ServiceAPI {
     }
 
 
+    // static async getAll(collection,pk, token) {
+    //     console.info(`Token : ${token}`)
+    //
+    //     const url =  typeof pk =="number"?`${API_URL}/api/${collection}/${pk}`:`${API_URL}/api/${collection}`;
+    //     return await axios.get(url, {
+    //         headers: {
+    //             'Authorization': `Bearer ${token}`
+    //         }
+    //     })
+    // }
 
     static async getAll(collection, token) {
         console.info(`Token : ${token}`)
-        const url = `${API_URL}/api/${collection}/`;
+
+        const url =  `${API_URL}/api/${collection}`;
         return await axios.get(url, {
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -54,7 +66,7 @@ export default class ServiceAPI {
         })
     }
 
-    static async getWorkOrders(employee_id, token){
+    static async getWorkOrders(employee_id, token) {
         console.info(`Token : ${token}`)
         console.info(`empId : ${employee_id}`)
         const url = `${API_URL}/api/work_orders/${employee_id}/`;
@@ -64,4 +76,12 @@ export default class ServiceAPI {
             }
         })
     }
+
+
+    static async login(user) {
+
+        const url = `${API_URL}/dj-rest-auth/login/`;
+        return await axios.post(url, user)
+    }
+
 }
